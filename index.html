@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>voice test · Peninsular Spanish — ElevenAgents</title>
+    <title>voice test · French and German — ElevenAgents</title>
     <meta name="theme-color" content="#f4f4f5" />
   </head>
   <body>
@@ -20,7 +20,7 @@
           />
           <div class="brand-text">
             <span class="brand-name">ElevenAgents</span>
-            <span class="brand-sub">Peninsular Spanish</span>
+            <span class="brand-sub">French and German</span>
           </div>
         </div>
       </header>
@@ -35,42 +35,25 @@
                 you know exactly what the model is optimising for during this voice test.
               </p>
             </div>
+            <section class="voice-block prompt-lang" aria-labelledby="lang-heading">
+              <h2 id="lang-heading">Session language</h2>
+              <p class="field-hint">
+                Language and the system prompt below are sent to the agent as overrides before you connect.
+                End the call to change them.
+              </p>
+              <label class="select-wrap">
+                <span class="visually-hidden">Session language</span>
+                <select id="languageSelect" class="select" aria-describedby="lang-heading">
+                  <option value="fr" selected>Français</option>
+                  <option value="de">Deutsch</option>
+                </select>
+              </label>
+            </section>
             <div class="prompt-scroll" tabindex="0">
-              <pre class="prompt-body" id="systemPrompt"># Personalidad
-Eres Álex, un compañero de charla ligera diseñado exclusivamente para ayudar a probar la calidad de voz y el flujo conversacional. Rasgos principales: cercano, curioso, ligeramente ingenioso, nunca intrusivo, nunca condescendiente.
-
-# Entorno
-Hablas con usuarios que están evaluando un agente de voz. No tienes ninguna otra función más allá de mantener una conversación natural y fluida en español peninsular.
-
-# Tono
-- Usa siempre español peninsular estándar: "vosotros", "vale", "venga", "¿qué tal?", vocabulario y expresiones propias de España.
-- Respuestas cortas y naturales, como en una charla informal entre conocidos.
-- Mantén ritmo conversacional: pregunta, escucha, responde con calidez.
-- Toma la iniciativa con preguntas sencillas cuando la conversación se ralentice.
-
-# Objetivo
-Mantén la conversación dentro de estos temas cotidianos y ligeros:
-- El tiempo y el clima
-- Comida y gastronomía española
-- Música y aficiones
-- Rutinas diarias
-- Planes para el fin de semana
-- Deporte y resultados
-- Viajes y destinos soñados
-
-# Normalización de texto
-Escribe siempre los números, fechas, horas, porcentajes, unidades y cualquier símbolo como palabras completas, correctamente declinadas y concordadas en su contexto. Por ejemplo: "treinta y dos grados", "las tres y cuarto de la tarde", "el veintidós de abril", "un cincuenta por ciento", "a ciento veinte kilómetros por hora". Esto es importante para garantizar una síntesis de voz natural y sin errores.
-
-# Guardianes
-- Habla únicamente en español peninsular. Nunca cambies de idioma aunque el usuario lo solicite. Esto es importante.
-- No profundices en temas polémicos, políticos, personales sensibles ni profesionales.
-- No des información factual compleja ni ningún tipo de asesoramiento.
-- Si el usuario desvía la conversación fuera de los temas ligeros, redirige con naturalidad hacia uno de ellos.
-- Varía siempre el vocabulario y el enfoque; no repitas las mismas preguntas.
-</pre>
+              <pre class="prompt-body" id="systemPrompt"></pre>
             </div>
           </div>
-          <p class="card-model-foot" aria-label="LLM: GPT-4o">LLM: GPT-4o</p>
+          <p class="card-model-foot" aria-label="LLM: qwen3.5:35b-a3b">LLM: qwen3.5:35b-a3b</p>
         </aside>
 
         <main class="card control-card">
@@ -78,8 +61,8 @@ Escribe siempre los números, fechas, horas, porcentajes, unidades y cualquier s
             <section class="voice-block" aria-labelledby="voice-heading">
               <h2 id="voice-heading">Voice</h2>
               <p class="field-hint">
-                Pick the voice the agent speaks with before you connect. To switch voices, end the call first —
-                it can’t be changed during a session.
+                The list matches the session language (French or German on the left). Pick a voice before you
+                connect. To switch voices, end the call first — it can’t be changed during a session.
               </p>
               <label class="select-wrap">
                 <span class="visually-hidden">Voice</span>

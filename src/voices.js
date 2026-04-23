@@ -1,23 +1,22 @@
 /**
- * ElevenLabs voice_id values for the dropdown. Edit labels to match names in your library.
+ * ElevenLabs voice_id values per session language. Labels are short id hints; rename in the UI if you map names in your library.
  */
-const IDS = [
-  "Astm9kBg2GoJpvmLehN0",
-  "9B6qQdh3qf1JUYTPPqV7",
-  "YzYhZnqss746aWqRJC9H",
-  "XCwC1YU8b4SGMtnX5Qwr",
-  "psS9TrEzDPCk10harX8d",
-  "vqmq3bd63istIYHZxsYV",
-  "QrwRvbpswBgwmOulozTX",
-  "loJfO8jlTj6khCTCwavv",
-  "Ek1n0msUbTIdejEKyNMW",
-  "266TYS22fdxXLTfICz7W",
-  "Uo7HdPMCyPjRirKwQKtd",
-  "YFPFGVR1mImNYR9wDTpM",
-  "0F814WpHip5Wll1X8d5d",
-  "ZtkBZMkcwNBEP6zu1N7K",
-  "E7HyWrwFtIWIOHyBnzr3",
-  "cyy2EulTZZtaeMqQob9M",
+const VOICE_IDS_DE = [
+  "6mzbNhS53bPsK3B6J8SO",
+  "2FXRntcubymGvX9yNpHh",
+  "GwjY6fDnb4AAdn2JRL3G",
+  "WaymGChJdTpifCOzgTEU",
+  "SE6lAbQFKNhsae9oGZ1H",
+  "vOzXcfuwBioMzvtNVFVa",
+];
+
+const VOICE_IDS_FR = [
+  "bK8XhNA3h5zeyF3ZZYnv",
+  "1pCvFIzZ1LrBvLWXwUU7",
+  "PMWnMWefBtB7JOO5Mqnu",
+  "IUQLqSV87WCJltkmKT08",
+  "SE6lAbQFKNhsae9oGZ1H",
+  "vOzXcfuwBioMzvtNVFVa",
 ];
 
 function shortLabel(id, index) {
@@ -26,4 +25,11 @@ function shortLabel(id, index) {
   return `Voice ${n} · ${hint}`;
 }
 
-export const VOICES = IDS.map((id, i) => ({ id, label: shortLabel(id, i) }));
+function toOptions(ids) {
+  return ids.map((id, i) => ({ id, label: shortLabel(id, i) }));
+}
+
+export const VOICES_BY_LANG = {
+  de: toOptions(VOICE_IDS_DE),
+  fr: toOptions(VOICE_IDS_FR),
+};

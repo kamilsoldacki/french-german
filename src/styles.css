@@ -200,6 +200,12 @@ body {
   margin-bottom: 1.35rem;
 }
 
+.prompt-card .prompt-lang {
+  border-bottom: 1px solid var(--stroke);
+  margin-bottom: 0;
+  padding-bottom: 1.1rem;
+}
+
 .voice-block h2 {
   margin: 0 0 0.4rem;
   font-size: 1.0625rem;

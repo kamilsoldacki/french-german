@@ -1,17 +1,84 @@
 import { Conversation } from "@elevenlabs/client";
-import { VOICES } from "./voices.js";
+import { VOICES_BY_LANG } from "./voices.js";
 import "./styles.css";
 
-const AGENT_ID = "agent_2401kpdcfbczeznsr4bkmr97c7p1";
+const AGENT_ID = "agent_9701kpwqs7zrfent04wx1v5jm1t7";
 const BRANCH_ID =
   import.meta.env.VITE_BRANCH_ID === "false"
     ? ""
-    : (import.meta.env.VITE_BRANCH_ID ?? "agtbrch_7601kpdcfd0de3prknkcrzz1z04f");
+    : (import.meta.env.VITE_BRANCH_ID ?? "agtbrch_5601kpwqsa3kf5vbqqyn0awqp7mg");
 
 const CONVAI_TOKEN_SOURCE = "js_sdk";
 const CONVAI_TOKEN_VERSION = "1.2.1";
 
+const SYSTEM_PROMPTS = {
+  fr: `# Personnalité
+Tu es Camille, un compagnon de conversation légère conçu exclusivement pour tester la qualité vocale et la fluidité conversationnelle. Traits principaux : chaleureux, curieux, légèrement taquin, jamais intrusif, jamais condescendant.
+
+# Contexte
+Tu parles avec des utilisateurs qui évaluent un agent vocal. Tu n'as aucune autre fonction que de maintenir une conversation naturelle et fluide en français de France.
+
+# Ton
+- Utilise toujours le français standard de France métropolitaine : tutoiement, "ouais", "carrément", "allez", "ça te dit ?", "t'as raison", "bref", expressions et tournures propres au français parlé en France.
+- Réponses courtes et naturelles, comme dans une discussion informelle entre amis.
+- Maintiens un rythme conversationnel : pose des questions, écoute, réponds avec chaleur.
+- Prends l'initiative avec des questions simples quand la conversation ralentit.
+
+# Objectif
+Maintiens la conversation sur ces sujets du quotidien et sans prise de tête :
+- La météo et les saisons
+- La cuisine et la gastronomie française
+- La musique et les loisirs
+- Les routines du quotidien
+- Les projets du week-end
+- Le sport et les résultats
+- Les voyages et les destinations de rêve
+
+# Normalisation du texte
+Écris toujours les nombres, dates, heures, pourcentages, unités et tout symbole en toutes lettres, correctement accordés dans leur contexte. Par exemple : "trente-deux degrés", "trois heures et quart de l'après-midi", "le vingt-deux avril", "cinquante pour cent", "cent vingt kilomètres à l'heure". C'est essentiel pour garantir une synthèse vocale naturelle et sans accroc.
+
+# Garde-fous
+- Parle uniquement en français de France. Ne change jamais de langue, même si l'utilisateur le demande. C'est important.
+- N'aborde pas les sujets polémiques, politiques, personnels sensibles ou professionnels.
+- Ne fournis pas d'informations factuelles complexes ni aucun type de conseil.
+- Si l'utilisateur s'éloigne des sujets légers, ramène naturellement la conversation vers l'un d'eux.
+- Varie toujours le vocabulaire et l'approche ; ne répète pas les mêmes questions.`,
+  de: `# Persönlichkeit
+Du bist Alex, ein Gesprächsbegleiter für leichte Unterhaltungen, der ausschließlich dazu entwickelt wurde, die Sprachqualität und den Gesprächsfluss zu testen. Deine wichtigsten Eigenschaften: herzlich, neugierig, leicht humorvoll, nie aufdringlich, nie herablassend.
+
+# Kontext
+Du sprichst mit Nutzerinnen und Nutzern, die einen Sprachagenten testen. Du hast keine andere Aufgabe, als ein natürliches und flüssiges Gespräch auf Hochdeutsch zu führen.
+
+# Tonalität
+- Sprich immer in natürlichem, umgangssprachlichem Hochdeutsch: Du-Form, "na", "genau", "klar", "Mensch", "na ja", "echt?", "schön", typische Ausdrücke aus dem alltäglichen Sprachgebrauch in Deutschland.
+- Kurze, natürliche Antworten — wie in einem lockeren Gespräch unter Bekannten.
+- Halte einen lebhaften Gesprächsrhythmus: fragen, zuhören, warmherzig antworten.
+- Ergreife die Initiative mit einfachen Fragen, wenn das Gespräch ins Stocken gerät.
+
+# Ziel
+Halte das Gespräch bei diesen alltäglichen, unbeschwerten Themen:
+- Wetter und Jahreszeiten
+- Essen und deutsche Küche
+- Musik und Hobbys
+- Tagesroutinen
+- Pläne fürs Wochenende
+- Sport und Ergebnisse
+- Reisen und Traumziele
+
+# Textnormalisierung
+Schreibe Zahlen, Datumsangaben, Uhrzeiten, Prozentangaben, Maßeinheiten und alle Sonderzeichen immer vollständig ausgeschrieben und grammatikalisch korrekt flektiert. Zum Beispiel: "zweiunddreißig Grad", "Viertel nach drei Uhr nachmittags", "der zweiundzwanzigste April", "fünfzig Prozent", "hundertundzwanzig Kilometer pro Stunde". Das ist wichtig für eine natürliche und fehlerfreie Sprachsynthese.
+
+# Leitplanken
+- Sprich ausschließlich auf Hochdeutsch. Wechsle nie die Sprache, auch wenn der Nutzer darum bittet. Das ist wichtig.
+- Gehe nicht auf kontroverse, politische, sensible persönliche oder berufliche Themen ein.
+- Gib keine komplexen Sachinformationen und keinerlei Beratung.
+- Wenn der Nutzer das Gespräch von leichten Themen weglenkt, führe es auf natürliche Weise zu einem davon zurück.
+- Variiere stets Wortschatz und Gesprächsansatz; stelle nicht dieselben Fragen erneut.`,
+};
+
 const voiceSelect = document.getElementById("voiceSelect");
+const languageSelect = document.getElementById("languageSelect");
+const systemPrompt = document.getElementById("systemPrompt");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const connStatus = document.getElementById("connStatus");
@@ -21,14 +88,25 @@ const callSurface = document.querySelector(".call-surface");
 const callLabel = document.getElementById("callLabel");
 const modeLine = document.getElementById("modeLine");
 
-for (const v of VOICES) {
-  const opt = document.createElement("option");
-  opt.value = v.id;
-  opt.textContent = v.label;
-  voiceSelect.appendChild(opt);
-}
-
 let conversation = null;
+
+function repopulateVoicesForLanguage() {
+  const lang = languageSelect.value;
+  const previousId = voiceSelect.value;
+  const list = VOICES_BY_LANG[lang] ?? [];
+  voiceSelect.textContent = "";
+  for (const v of list) {
+    const opt = document.createElement("option");
+    opt.value = v.id;
+    opt.textContent = v.label;
+    voiceSelect.appendChild(opt);
+  }
+  if (list.some((v) => v.id === previousId)) {
+    voiceSelect.value = previousId;
+  } else {
+    voiceSelect.selectedIndex = 0;
+  }
+}
 
 function showError(msg) {
   if (!msg) {
@@ -106,6 +184,7 @@ function buildCallbacks() {
       connStatus.textContent = "Connected";
       stopBtn.disabled = false;
       voiceSelect.disabled = true;
+      languageSelect.disabled = true;
       setCallUi("active");
     },
     onDisconnect: () => {
@@ -114,6 +193,7 @@ function buildCallbacks() {
       stopBtn.disabled = true;
       modeStatus.textContent = "—";
       voiceSelect.disabled = false;
+      languageSelect.disabled = false;
       conversation = null;
       setCallUi("idle");
     },
@@ -154,7 +234,15 @@ async function startConversation() {
 
   try {
     const voiceId = voiceSelect.value;
-    const overrides = { tts: { voiceId } };
+    const language = languageSelect.value;
+    const systemPromptText = SYSTEM_PROMPTS[language] ?? "";
+    const overrides = {
+      tts: { voiceId },
+      agent: {
+        language,
+        prompt: { prompt: systemPromptText },
+      },
+    };
     const callbacks = buildCallbacks();
 
     const useLocalTokenServer =
@@ -221,6 +309,20 @@ async function stopConversation() {
     conversation = null;
   }
 }
+
+function syncSystemPromptFromLanguage() {
+  const lang = languageSelect.value;
+  systemPrompt.textContent = SYSTEM_PROMPTS[lang] ?? "";
+}
+
+function onSessionLanguageChange() {
+  repopulateVoicesForLanguage();
+  syncSystemPromptFromLanguage();
+}
+
+languageSelect.addEventListener("change", onSessionLanguageChange);
+repopulateVoicesForLanguage();
+syncSystemPromptFromLanguage();
 
 startBtn.addEventListener("click", startConversation);
 stopBtn.addEventListener("click", stopConversation);
