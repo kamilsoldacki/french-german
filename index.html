@@ -26,20 +26,13 @@
       </header>
 
       <div class="grid">
-        <aside class="card prompt-card" aria-labelledby="prompt-heading">
+        <aside class="card prompt-card" aria-labelledby="lang-heading">
           <div class="card-column-body">
-            <div class="card-head">
-              <h2 id="prompt-heading">System prompt</h2>
-              <p class="card-lead">
-                This is the persona and behaviour the agent is instructed to follow. It is shown here so
-                you know exactly what the model is optimising for during this voice test.
-              </p>
-            </div>
             <section class="voice-block prompt-lang" aria-labelledby="lang-heading">
               <h2 id="lang-heading">Session language</h2>
               <p class="field-hint">
-                Language and the system prompt below are sent to the agent as overrides before you connect.
-                End the call to change them.
+                Language, welcome message, and system prompt below are sent to the agent as overrides before
+                you connect. End the call to change them.
               </p>
               <label class="select-wrap">
                 <span class="visually-hidden">Session language</span>
@@ -48,6 +41,9 @@
                   <option value="de">Deutsch</option>
                 </select>
               </label>
+            </section>
+            <section class="welcome-block" aria-label="First message">
+              <p class="welcome-text" id="welcomeMessage"></p>
             </section>
             <div class="prompt-scroll" tabindex="0">
               <pre class="prompt-body" id="systemPrompt"></pre>

@@ -76,9 +76,15 @@ Schreibe Zahlen, Datumsangaben, Uhrzeiten, Prozentangaben, Maßeinheiten und all
 - Variiere stets Wortschatz und Gesprächsansatz; stelle nicht dieselben Fragen erneut.`,
 };
 
+const FIRST_MESSAGES = {
+  fr: "🇫🇷 Salut, moi c'est Camille ! Alors, comment tu vas aujourd'hui ?",
+  de: "🇩🇪 Hey, ich bin Alex! Na, wie läuft's bei dir heute so?",
+};
+
 const voiceSelect = document.getElementById("voiceSelect");
 const languageSelect = document.getElementById("languageSelect");
 const systemPrompt = document.getElementById("systemPrompt");
+const welcomeMessage = document.getElementById("welcomeMessage");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const connStatus = document.getElementById("connStatus");
@@ -223,7 +229,7 @@ function setCallUi(state) {
     modeLine.textContent = "Grant microphone access if the browser asks.";
   } else if (state === "active") {
     callLabel.textContent = "Live session";
-    modeLine.textContent = "Speak naturally — the agent follows the system prompt on the left.";
+    modeLine.textContent = "Speak naturally — the settings on the left apply to the agent.";
   }
 }
 
@@ -236,11 +242,13 @@ async function startConversation() {
     const voiceId = voiceSelect.value;
     const language = languageSelect.value;
     const systemPromptText = SYSTEM_PROMPTS[language] ?? "";
+    const firstMessage = FIRST_MESSAGES[language] ?? "";
     const overrides = {
       tts: { voiceId },
       agent: {
         language,
         prompt: { prompt: systemPromptText },
+        firstMessage,
       },
     };
     const callbacks = buildCallbacks();
@@ -315,14 +323,21 @@ function syncSystemPromptFromLanguage() {
   systemPrompt.textContent = SYSTEM_PROMPTS[lang] ?? "";
 }
 
+function syncWelcomeFromLanguage() {
+  const lang = languageSelect.value;
+  welcomeMessage.textContent = FIRST_MESSAGES[lang] ?? "";
+}
+
 function onSessionLanguageChange() {
   repopulateVoicesForLanguage();
   syncSystemPromptFromLanguage();
+  syncWelcomeFromLanguage();
 }
 
 languageSelect.addEventListener("change", onSessionLanguageChange);
 repopulateVoicesForLanguage();
 syncSystemPromptFromLanguage();
+syncWelcomeFromLanguage();
 
 startBtn.addEventListener("click", startConversation);
 stopBtn.addEventListener("click", stopConversation);
