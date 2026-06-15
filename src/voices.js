@@ -20,11 +20,13 @@ function toVoices(entries) {
 const VOICES_DE = toVoices([
   { id: "ZswvODxwIaNVszyBPqBF", kind: "VL" },
   { id: "ExwcbOgTQzSbH9isPUf8", kind: "custom" },
+  { id: "xJEDraKZTACJqXk5LYpX", kind: "custom" },
 ]);
 
 const VOICES_FR = toVoices([
   { id: "O31r762Gb3WFygrEOGh0", kind: "VL" },
   { id: "cMSXaOTeRpVYIZJCtHGJ", kind: "custom" },
+  { id: "xJEDraKZTACJqXk5LYpX", kind: "custom" },
 ]);
 
 export const VOICES_BY_LANG = {
